@@ -18,14 +18,19 @@ import (
 )
 
 const (
-	lastName    = "lastName"
-	email       = "email@mail.test"
-	passValid   = "123456"
-	name        = "name"
-	newName     = "newName"
-	newLastName = "newLastName"
-	newEmail    = "newEmail@mail.test"
-	newPass     = "newPass1234567890123456789012345"
+	lastName       = "lastName"
+	email          = "email@mail.test"
+	passValid      = "123456"
+	name           = "name"
+	newName        = "newName"
+	newLastName    = "newLastName"
+	newEmail       = "newEmail@mail.test"
+	newPass        = "newPass1234567890123456789012345"
+	position       = "position"
+	companyName    = "companyName"
+	companySize    = 123
+	workingOn      = "workingOn"
+	isProfessional = true
 )
 
 func TestUserRepository(t *testing.T) {
@@ -52,6 +57,22 @@ func TestUserRepository(t *testing.T) {
 			Email:        email,
 			PasswordHash: []byte(passValid),
 			CreatedAt:    time.Now(),
+		}
+		testUsers(ctx, t, repository, user)
+
+		// test professional user
+		user = &console.User{
+			ID:             testrand.UUID(),
+			FullName:       name,
+			ShortName:      lastName,
+			Email:          email,
+			PasswordHash:   []byte(passValid),
+			CreatedAt:      time.Now(),
+			IsProfessional: isProfessional,
+			Position:       position,
+			CompanyName:    companyName,
+			CompanySize:    companySize,
+			WorkingOn:      workingOn,
 		}
 		testUsers(ctx, t, repository, user)
 	})
@@ -128,6 +149,11 @@ func testUsers(ctx context.Context, t *testing.T, repository console.Users, user
 		assert.Equal(t, userByID.PasswordHash, userByEmail.PasswordHash)
 		assert.Equal(t, userByID.PartnerID, userByEmail.PartnerID)
 		assert.Equal(t, userByID.CreatedAt, userByEmail.CreatedAt)
+		assert.Equal(t, userByID.IsProfessional, userByEmail.IsProfessional)
+		assert.Equal(t, userByID.WorkingOn, userByEmail.WorkingOn)
+		assert.Equal(t, userByID.Position, userByEmail.Position)
+		assert.Equal(t, userByID.CompanyName, userByEmail.CompanyName)
+		assert.Equal(t, userByID.CompanySize, userByEmail.CompanySize)
 	})
 
 	t.Run("Update user success", func(t *testing.T) {
